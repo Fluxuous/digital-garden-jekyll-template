@@ -32,24 +32,48 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Show repository contents
+        run: |
+          pwd
+          ls -la
+          
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
+          ruby-version: '3.4.2'
           bundler-cache: true
+          
+      - name: Show Ruby and Environment Info
+        run: |
+          ruby -v
+          gem -v
+          bundle -v
+          
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v3
+        
+      - name: Install dependencies
+        run: |
+          bundle config set --local path 'vendor/bundle'
+          bundle install --jobs 4 --retry 3
+          
       - name: Build with Jekyll
         run: |
-          bundle install
-          bundle exec jekyll build --verbose
-          echo "::group::Build output"
-          ls -la _site
-          echo "::endgroup::"
+          echo "Starting Jekyll build..."
+          bundle exec jekyll build --trace --verbose
+          echo "Build completed. Contents of _site:"
+          ls -la _site/
         env:
           JEKYLL_ENV: production
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
+        with:
+          path: _site/
 
   # Deployment job
   deploy:

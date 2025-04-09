@@ -1,0 +1,5 @@
+url: "https://fluxuous.github.io"
+baseurl: "/digital-garden-jekyll-template"
+build:
+  source: /
+  destination: _site 
