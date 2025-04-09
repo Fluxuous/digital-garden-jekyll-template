@@ -42,6 +42,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -49,10 +51,15 @@ jobs:
           ruby-version: '3.4.2'
           bundler-cache: true
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build with Jekyll
         run: |
           bundle install
-          bundle exec jekyll build
+          bundle exec jekyll build --trace
         env:
           JEKYLL_ENV: production
 
